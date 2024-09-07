@@ -111,7 +111,9 @@ public class Main {
 
     public static void task7() {
         List<Animal> animals = Util.getAnimals();
-//        animals.stream() Продолжить ...
+
+        System.out.println("Ни одно животное не имеет страну происхождения Oceania. Верно? " + animals.stream()
+                .noneMatch(animal -> "Oceania".equals(animal.getGender())));
     }
 
     public static void task8() {
