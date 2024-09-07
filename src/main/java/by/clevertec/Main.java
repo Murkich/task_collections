@@ -86,6 +86,7 @@ public class Main {
 
     public static void task4() {
         List<Animal> animals = Util.getAnimals();
+
         animals.stream()
                 .filter(animal -> animal.getGender().equals("Female"))
                 .map(animal -> 1)
@@ -95,7 +96,10 @@ public class Main {
 
     public static void task5() {
         List<Animal> animals = Util.getAnimals();
-//        animals.stream() Продолжить ...
+
+        System.out.println("Есть хоть одно животное из Венгрии? " + animals.stream()
+                .filter(animal -> animal.getAge() >= 20 && animal.getAge() <= 30)
+                .anyMatch(animal -> "Hungarian".equals(animal.getOrigin())));
     }
 
     public static void task6() {
