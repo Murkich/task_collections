@@ -86,7 +86,11 @@ public class Main {
 
     public static void task4() {
         List<Animal> animals = Util.getAnimals();
-//        animals.stream() Продолжить ...
+        animals.stream()
+                .filter(animal -> animal.getGender().equals("Female"))
+                .map(animal -> 1)
+                .reduce(Integer::sum)
+                .ifPresent(System.out::println);
     }
 
     public static void task5() {
