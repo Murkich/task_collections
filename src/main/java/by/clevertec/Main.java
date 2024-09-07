@@ -140,7 +140,11 @@ public class Main {
 
     public static void task10() {
         List<Animal> animals = Util.getAnimals();
-//        animals.stream() Продолжить ...
+
+        animals.stream()
+                .map(Animal::getAge)
+                .reduce(Integer::sum)
+                .ifPresent(System.out::println);
     }
 
     public static void task11() {
