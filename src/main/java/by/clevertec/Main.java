@@ -11,10 +11,9 @@ import by.clevertec.util.Util;
 
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.AbstractMap;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -176,7 +175,19 @@ public class Main {
 
     public static void task13() {
         List<House> houses = Util.getHouses();
-//        houses.stream() Продолжить ...
+
+        houses.stream()
+                .flatMap(house -> house.getPersonList().stream()
+                .map(person -> new AbstractMap.SimpleEntry<>(house.getBuildingType(), person)))
+                .sorted(Comparator.<AbstractMap.SimpleEntry<String, Person>, Boolean>comparing(entry -> entry.getKey().equals("Hospital")).reversed()
+                        .thenComparing(entry -> {
+                            Person person = entry.getValue();
+                            int age = Period.between(person.getDateOfBirth(), LocalDate.now()).getYears();
+                            return age >= 65 || age < 18;
+                        }).reversed())
+                .limit(500)
+                .map(AbstractMap.SimpleEntry::getValue)
+                .forEach(System.out::println);
     }
 
     public static void task14() {
