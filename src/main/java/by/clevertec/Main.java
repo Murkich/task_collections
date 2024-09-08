@@ -7,6 +7,7 @@ import by.clevertec.model.Flower;
 import by.clevertec.model.House;
 import by.clevertec.model.Person;
 import by.clevertec.model.Student;
+import by.clevertec.util.CarUtil;
 import by.clevertec.util.Util;
 
 import java.time.LocalDate;
@@ -14,6 +15,7 @@ import java.time.Period;
 import java.util.AbstractMap;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -47,17 +49,11 @@ public class Main {
     public static void task1() {
         List<Animal> animals = Util.getAnimals();
 
-        List<Animal> youngAnimals = animals.stream()
+        animals.stream()
                 .filter(animal -> animal.getAge() >= 10 && animal.getAge() <= 20)
                 .sorted(Comparator.comparing(Animal::getAge))
-                .toList();
-
-        IntStream.range(0, youngAnimals.size())
-                .boxed()
-                .collect(Collectors.groupingBy(i -> i / 7))
-                .getOrDefault(2, List.of())
-                .stream()
-                .map(youngAnimals::get)
+                .skip(14)
+                .limit(7)
                 .forEach(System.out::println);
     }
 
@@ -192,7 +188,17 @@ public class Main {
 
     public static void task14() {
         List<Car> cars = Util.getCars();
-//        cars.stream() Продолжить ...
+
+        cars.stream()
+                .collect(Collectors.groupingBy(CarUtil::carTypeLogistic))
+                .entrySet().stream()
+                .filter(entry -> !entry.getKey().equals("Else"))
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        entry -> entry.getValue().stream().
+                                mapToDouble(car -> car.getMass() / 1000.0).sum() * 7.14
+                ))
+                .forEach((country, cost) -> System.out.printf("Стоимость для %s: %.2f$\n", country, cost))
     }
 
     public static void task15() {
