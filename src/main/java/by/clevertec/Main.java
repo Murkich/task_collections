@@ -298,11 +298,28 @@ public class Main {
 
     public static void task21() {
         List<Student> students = Util.getStudents();
-//        students.stream() Продолжить ...
+
+        students.stream()
+                .collect(Collectors.groupingBy(
+                        Student::getGroup,
+                        Collectors.counting()))
+                .forEach((group, count) ->
+                System.out.println("Группа: " + group + ", Количество студентов: " + count));
     }
 
     public static void task22() {
         List<Student> students = Util.getStudents();
-//        students.stream() Продолжить ...
+
+        students.stream()
+                .collect(Collectors.groupingBy(
+                        Student::getFaculty,
+                        Collectors.minBy(Comparator.comparingInt(Student::getAge)) // Определяем минимальный возраст
+                ))
+                .entrySet()
+                .stream()
+                .collect(Collectors.toMap(Map.Entry::getKey, entry ->
+                        entry.getValue().map(Student::getAge).orElse(0)))
+                .forEach((faculty, minAge) ->
+                System.out.println("Факультет: " + faculty + " Минимальный возраст: " + minAge));
     }
 }
