@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 public class Main {
 
@@ -189,16 +190,23 @@ public class Main {
     public static void task14() {
         List<Car> cars = Util.getCars();
 
+        final double[] totalRevenue = {0};
+
         cars.stream()
-                .collect(Collectors.groupingBy(CarUtil::carTypeLogistic))
-                .entrySet().stream()
+                .collect(Collectors.groupingBy(CarUtil::carTypeLogistic)).entrySet().stream()
                 .filter(entry -> !entry.getKey().equals("Else"))
                 .collect(Collectors.toMap(
                         Map.Entry::getKey,
                         entry -> entry.getValue().stream().
                                 mapToDouble(car -> car.getMass() / 1000.0).sum() * 7.14
                 ))
-                .forEach((country, cost) -> System.out.printf("Стоимость для %s: %.2f$\n", country, cost))
+                .forEach((country, cost) -> {
+                    System.out.printf("Стоимость для %s: %.2f$\n", country, cost);
+
+                    totalRevenue[0] += cost;
+                });
+
+        System.out.printf("Общие расходы логистической компании: %.2f$\n", totalRevenue[0]);
     }
 
     public static void task15() {
