@@ -273,7 +273,27 @@ public class Main {
 
     public static void task20() {
         List<Student> students = Util.getStudents();
-//        students.stream() Продолжить ...
+        List<Examination> examinations = Util.getExaminations();
+
+        Map<String, Double> averageExam1ByFaculty = students.stream()
+                .collect(Collectors.groupingBy(
+                        Student::getFaculty,
+                        Collectors.averagingInt(student ->
+                                examinations.stream()
+                                        .filter(exam -> exam.getStudentId() == student.getId())
+                                        .findFirst()
+                                        .map(Examination::getExam1)
+                                        .orElse(0))));
+
+        Optional<Map.Entry<String, Double>> maxFaculty = averageExam1ByFaculty.entrySet().stream()
+                .max(Map.Entry.comparingByValue());
+
+        if (maxFaculty.isPresent()) {
+            System.out.printf("Факультет с максимальной средней оценкой по первому экзамену: %s Средняя оценка: %.2f",
+                    maxFaculty.get().getKey(), maxFaculty.get().getValue());
+        } else {
+            System.out.println("Данные не найдены.");
+        }
     }
 
     public static void task21() {
