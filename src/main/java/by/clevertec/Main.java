@@ -236,6 +236,7 @@ public class Main {
 
     public static void task17() {
         List<Student> students = Util.getStudents();
+
         students.stream()
                 .map(Student::getGroup)
                 .distinct()
@@ -245,7 +246,15 @@ public class Main {
     public static void task18() {
         List<Student> students = Util.getStudents();
         List<Examination> examinations = Util.getExaminations();
-//        students.stream() Продолжить ...
+
+        students.stream()
+                .collect(Collectors.groupingBy(
+                        Student::getFaculty,
+                        Collectors.averagingInt(Student::getAge)))
+                .entrySet().stream()
+                .sorted(Map.Entry.<String, Double>comparingByValue().reversed())
+                .forEach(entry ->
+                        System.out.printf("Факультет: %s Средний возраст: %.2f\n", entry.getKey(), entry.getValue()));
     }
 
     public static void task19() {
