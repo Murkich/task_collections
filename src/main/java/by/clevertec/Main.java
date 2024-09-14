@@ -11,10 +11,7 @@ import by.clevertec.util.*;
 
 import java.time.LocalDate;
 import java.time.Period;
-import java.util.AbstractMap;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Main {
@@ -245,7 +242,6 @@ public class Main {
 
     public static void task18() {
         List<Student> students = Util.getStudents();
-        List<Examination> examinations = Util.getExaminations();
 
         students.stream()
                 .collect(Collectors.groupingBy(
@@ -259,7 +255,20 @@ public class Main {
 
     public static void task19() {
         List<Student> students = Util.getStudents();
-//        students.stream() Продолжить ...
+        List<Examination> examinations = Util.getExaminations();
+
+        System.out.println("Введите группу: ");
+        Scanner scanner = new Scanner(System.in);
+        String groupName = scanner.nextLine();
+
+        students.stream()
+                .filter(student -> student.getGroup().equals(groupName))
+                .filter(student -> examinations.stream()
+                        .anyMatch(exam -> exam.getStudentId() == student.getId() && exam.getExam3() > 4))
+                .forEach(student -> System.out.println(
+                        "Студент: " + student.getSurname() + ", группа: " + student.getGroup()));
+
+        scanner.close();
     }
 
     public static void task20() {
