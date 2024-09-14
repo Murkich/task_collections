@@ -211,7 +211,29 @@ public class Main {
 
     public static void task15() {
         List<Flower> flowers = Util.getFlowers();
-//        flowers.stream() Продолжить ...
+
+        final double waterCostPerCubicMeter = 1.39;
+
+        double totalCost = flowers.stream().sorted(Comparator.comparing(Flower::getOrigin).reversed()
+                        .thenComparing(Flower::getPrice)
+                        .thenComparing(Comparator.comparingDouble(Flower::getWaterConsumptionPerDay).reversed()))
+                .filter(flower -> flower.getCommonName().compareToIgnoreCase("C") >= 0 &&
+                        flower.getCommonName().compareToIgnoreCase("S") < 0)
+                .filter(flower -> flower.isShadePreferred() &&
+                        flower.getFlowerVaseMaterial().stream().anyMatch(material ->
+                                material.equalsIgnoreCase("glass") ||
+                                        material.equalsIgnoreCase("aluminum") ||
+                                        material.equalsIgnoreCase("steel")))
+                .mapToDouble(flower -> {
+                    double waterConsumptionPerYear = flower.getWaterConsumptionPerDay() * 365;
+                    double waterConsumptionForFiveYears = waterConsumptionPerYear * 5;
+                    double waterCostForFiveYears = waterConsumptionForFiveYears * waterCostPerCubicMeter;
+
+                    return flower.getPrice() + waterCostForFiveYears;
+                })
+                .sum();
+
+        System.out.printf("Общая стоимость всех выбранных растений: %.2f$\n", totalCost);
     }
 
     public static void task16() {
