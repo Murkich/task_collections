@@ -7,8 +7,7 @@ import by.clevertec.model.Flower;
 import by.clevertec.model.House;
 import by.clevertec.model.Person;
 import by.clevertec.model.Student;
-import by.clevertec.util.CarUtil;
-import by.clevertec.util.Util;
+import by.clevertec.util.*;
 
 import java.time.LocalDate;
 import java.time.Period;
@@ -17,8 +16,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 public class Main {
 
@@ -212,8 +209,6 @@ public class Main {
     public static void task15() {
         List<Flower> flowers = Util.getFlowers();
 
-        final double waterCostPerCubicMeter = 1.39;
-
         double totalCost = flowers.stream().sorted(Comparator.comparing(Flower::getOrigin).reversed()
                         .thenComparing(Flower::getPrice)
                         .thenComparing(Comparator.comparingDouble(Flower::getWaterConsumptionPerDay).reversed()))
@@ -224,13 +219,7 @@ public class Main {
                                 material.equalsIgnoreCase("glass") ||
                                         material.equalsIgnoreCase("aluminum") ||
                                         material.equalsIgnoreCase("steel")))
-                .mapToDouble(flower -> {
-                    double waterConsumptionPerYear = flower.getWaterConsumptionPerDay() * 365;
-                    double waterConsumptionForFiveYears = waterConsumptionPerYear * 5;
-                    double waterCostForFiveYears = waterConsumptionForFiveYears * waterCostPerCubicMeter;
-
-                    return flower.getPrice() + waterCostForFiveYears;
-                })
+                .mapToDouble(FlowerUtil::getFlowerCost)
                 .sum();
 
         System.out.printf("Общая стоимость всех выбранных растений: %.2f$\n", totalCost);
@@ -238,7 +227,11 @@ public class Main {
 
     public static void task16() {
         List<Student> students = Util.getStudents();
-//        students.stream() Продолжить ...
+        
+        students.stream()
+                .filter(student -> student.getAge() < 18)
+                .sorted(Comparator.comparing(Student::getSurname))
+                .forEach(student -> System.out.println(student.getSurname() + ", возраст: " + student.getAge()));
     }
 
     public static void task17() {
